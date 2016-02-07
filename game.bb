@@ -139,7 +139,10 @@ Function updateEvent()
 				e\y = e\orgY + Rnd(-SHAKE_MANGNITUDE , SHAKE_MANGNITUDE )
 				PlaySound leftSnd
 				setColor(Rnd(100, 255), Rnd(100, 255), Rnd(100, 255))
+				combo = combo + 1
 			End If
+			
+			If KeyHit(200) Or KeyHit(205) Or KeyHit(208) Then combo = 0
 		End If
 		
 		If Mid(e\list, 1, 1) = "U" Then
@@ -150,7 +153,10 @@ Function updateEvent()
 				e\y = e\orgY + Rnd(-SHAKE_MANGNITUDE , SHAKE_MANGNITUDE )
 				PlaySound upSnd
 				setColor(Rnd(100, 255), Rnd(100, 255), Rnd(100, 255))
+				combo = combo + 1
 			End If
+			
+			If KeyHit(208) Or KeyHit(205) Or KeyHit(203) Then combo = 0
 		End If
 		
 		If Mid(e\list, 1, 1) = "R" Then
@@ -161,7 +167,10 @@ Function updateEvent()
 				e\y = e\orgY + Rnd(-SHAKE_MANGNITUDE, SHAKE_MANGNITUDE )
 				PlaySound rightSnd
 				setColor(Rnd(100, 255), Rnd(100, 255), Rnd(100, 255))
+				combo = combo + 1
 			End If
+			
+			If KeyHit(200) Or KeyHit(208) Or KeyHit(203) Then combo = 0
 		End If
 		
 		If Mid(e\list, 1, 1) = "D" Then
@@ -172,14 +181,17 @@ Function updateEvent()
 				e\y = e\orgY + Rnd(-64, 64)
 				PlaySound downSnd
 				setColor(Rnd(100, 255), Rnd(100, 255), Rnd(100, 255))
+				combo = combo + 1
 			End If
+			
+			If KeyHit(200) Or KeyHit(205) Or KeyHit(203) Then combo = 0
 		End If
 		
 		e\worth = e\worth * level
 		
 		If Len(e\list) <= 0 Then 
 			e\destroy = 1	
-			score = score + e\worth + 10*e\startLength
+			score = score + e\worth + 10*e\startLength + combo*100
 			level = level * 0.9999
 			toAddNewEvent = 1
 		End If
@@ -291,6 +303,8 @@ Global startscreen = 1
 
 Global level# = 0.999
 
+Global combo
+
 Global r#, g#, b#
 
 Function setColor(r2#, g2#, b2#)
@@ -310,6 +324,7 @@ Function startGame()
 	displayScore = 0
 	level = 0.999
 	toAddNewEvent = 1
+	combo = 0
 End Function
 
 Function updateGame()
@@ -342,6 +357,9 @@ End Function
 Function drawGame()
 	Text 10, 10, "SCORE: " + Int(displayScore)
 	Text 10, 30, "TOTAL TIME LEFT: " + Int((maxTime - countDown))
+	Color 255, 255-combo*5, 255-combo*5
+	If combo > 0 Then Text 10, 50, "COMBO: " + combo
+	Color 255, 255, 255
 	
 	displayScore = lerp(displayScore, score, 0.1)
 	

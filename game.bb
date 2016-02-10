@@ -58,6 +58,12 @@ Function getFileLength(path$)
 	CloseFile(file)
 End Function
 
+Function clamp#(v#, min#, max#)
+	If v < min Then Return min
+	If v > max Then Return max
+	Return v
+End Function 
+
 Function removeChar$(org$, offset)
 	Local length = Len(org$)
 	Local tmp$ = ""
@@ -357,7 +363,7 @@ End Function
 Function drawGame()
 	Text 10, 10, "SCORE: " + Int(displayScore)
 	Text 10, 30, "TOTAL TIME LEFT: " + Int((maxTime - countDown))
-	Color 255, 255-combo*5, 255-combo*5
+	Color 255, clamp(255-combo*5, 0, 255), clamp(255-combo*5, 0, 255)
 	If combo > 0 Then Text 10, 50, "COMBO: " + combo
 	Color 255, 255, 255
 	
@@ -411,6 +417,10 @@ While Not KeyHit(1)
 	Cls 
 		WaitTimer(frametimer)
 		If KeyDown(1) Then End 
+		If KeyDown(31) Then 
+			spritesheet = LoadImage("stirner.bmp")
+			MaskImage(spritesheet, 255, 0, 255)
+		End If
 		draw()
 		update() 
 		updateHighscore()
